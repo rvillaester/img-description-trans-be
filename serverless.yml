@@ -1,0 +1,84 @@
+service: hackathon-service-2023
+
+provider:
+  name: aws
+  runtime: java11
+  region: ${opt:stage, 'ap-southeast-2'}
+  stage: ${opt:stage, 'dev'}
+  apiGateway:
+    binaryMediaTypes:
+      - '*/*'
+
+package:
+  artifact: target/hackathon.jar
+
+functions:
+  test:
+    handler: com.hackathon.LambdaHandler::handleRequest
+    role: LambdaRole
+    events:
+      - http:
+          path: content/test
+          method: post
+          cors: true
+  upload:
+    handler: com.hackathon.LambdaHandler::handleRequest
+    role: LambdaRole
+    events:
+      - http:
+          path: content/upload
+          method: post
+          cors: true
+  uploadImage:
+    handler: com.hackathon.LambdaHandler::handleRequest
+    role: LambdaRole
+    events:
+      - http:
+          path: content/uploadHack
+          method: post
+          cors: true
+
+resources:
+  Resources:
+    LambdaRole:
+      Type: AWS::IAM::Role
+      Properties:
+        RoleName: hackathon-lambda-role-2023
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action: sts:AssumeRole
+        Policies:
+          - PolicyName: hackathon-role-policy
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - logs:CreateLogGroup
+                    - logs:CreateLogStream
+                    - logs:PutLogEvents
+                  Resource:
+                    - 'Fn::Join':
+                        - ':'
+                        - - 'arn:aws:logs'
+                          - Ref: 'AWS::Region'
+                          - Ref: 'AWS::AccountId'
+                          - 'log-group:/aws/lambda/*:*:*'
+                - Effect: Allow
+                  Action:
+                    - translate:*
+                  Resource: '*'
+    GatewayResponseDefault4XX:
+      Type: 'AWS::ApiGateway::GatewayResponse'
+      Properties:
+        ResponseParameters:
+          gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+          gatewayresponse.header.Access-Control-Allow-Headers: "'*'"
+        ResponseType: DEFAULT_4XX
+        RestApiId:
+          Ref: 'ApiGatewayRestApi'
