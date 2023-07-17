@@ -1,27 +1,25 @@
 package com.hackathon.controller
 
+import com.hackathon.data.ContentRequest
 import com.hackathon.service.ContentService
-import org.springframework.util.StringUtils
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import org.springframework.web.multipart.MultipartFile
-
 
 @RestController
 @RequestMapping("/content")
 class ContentController(private val service: ContentService) {
 
     @PostMapping("upload")
-    fun upload(@RequestParam("language") language: String, @RequestParam("file") file: MultipartFile): String {
-        val filename = file.originalFilename?.let { StringUtils.cleanPath(it) } ?: file.name
-        return service.generateAndTranslateDescription(filename, language)
+    fun upload(@RequestBody request: ContentRequest): String {
+        return service.generateAndTranslateDescription(request)
     }
 
     @PostMapping("uploadHack")
-    fun uploadHack(@RequestParam("language") language: String, @RequestParam("file") file: String): String {
-        return service.generateAndTranslateDescription(file, language)
+    fun uploadHack(@RequestBody request: ContentRequest): String {
+        return service.generateAndTranslateDescription(request.filename, request.language)
     }
 
     @PostMapping("test")
