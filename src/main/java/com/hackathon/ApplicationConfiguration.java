@@ -1,6 +1,8 @@
 package com.hackathon;
 
 import com.amazonaws.regions.Regions;
+import com.amazonaws.services.simplesystemsmanagement.AWSSimpleSystemsManagement;
+import com.amazonaws.services.simplesystemsmanagement.AWSSimpleSystemsManagementClientBuilder;
 import com.amazonaws.services.translate.AmazonTranslate;
 import com.amazonaws.services.translate.AmazonTranslateClient;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,9 +17,9 @@ public class ApplicationConfiguration {
     @Bean
     public ObjectMapper objectMapper(final Jackson2ObjectMapperBuilder builder) {
         return builder
-                .build()
-                .registerModule(new JavaTimeModule())
-                .setDefaultLeniency(false);
+            .build()
+            .registerModule(new JavaTimeModule())
+            .setDefaultLeniency(false);
     }
 
     @Bean
@@ -25,5 +27,11 @@ public class ApplicationConfiguration {
         return AmazonTranslateClient.builder()
             .withRegion(Regions.AP_SOUTHEAST_2)
             .build();
+    }
+
+    @Bean
+    public AWSSimpleSystemsManagement ssm() {
+        return AWSSimpleSystemsManagementClientBuilder
+            .standard().withRegion(Regions.AP_SOUTHEAST_2).build();
     }
 }

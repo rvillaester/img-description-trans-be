@@ -73,6 +73,10 @@ resources:
                   Action:
                     - translate:*
                   Resource: '*'
+                - Effect: Allow
+                  Action:
+                    - ssm:*
+                  Resource: '*'
     GatewayResponseDefault4XX:
       Type: 'AWS::ApiGateway::GatewayResponse'
       Properties:
