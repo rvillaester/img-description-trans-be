@@ -29,6 +29,14 @@ functions:
           path: content/upload
           method: post
           cors: true
+  translate:
+    handler: com.hackathon.LambdaHandler::handleRequest
+    role: LambdaRole
+    events:
+      - http:
+          path: content/translate
+          method: post
+          cors: true
   uploadImage:
     handler: com.hackathon.LambdaHandler::handleRequest
     role: LambdaRole
