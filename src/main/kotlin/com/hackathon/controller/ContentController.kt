@@ -3,6 +3,7 @@ package com.hackathon.controller
 import com.hackathon.data.ContentRequest
 import com.hackathon.data.TranslateDescriptionRequest
 import com.hackathon.service.ContentService
+import com.microsoft.azure.cognitiveservices.vision.computervision.models.ComputerVisionErrorResponseException
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -20,7 +21,13 @@ class ContentController(private val service: ContentService) {
             return ResponseEntity("No image provided", org.springframework.http.HttpStatus.BAD_REQUEST)
         }
 
-        return ResponseEntity.ok(service.generateAndTranslateDescription(request))
+        try {
+            return ResponseEntity.ok(service.generateAndTranslateDescription(request))
+        } catch (e: ComputerVisionErrorResponseException) {
+            return ResponseEntity("Error describing image", org.springframework.http.HttpStatus.BAD_REQUEST)
+        } catch (e: Exception) {
+            return ResponseEntity("Unknown error encountered", org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR)
+        }
     }
 
     @PostMapping("translate")
