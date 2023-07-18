@@ -16,6 +16,7 @@ functions:
   test:
     handler: com.hackathon.LambdaHandler::handleRequest
     role: LambdaRole
+    timeout: 30
     events:
       - http:
           path: content/test
@@ -24,6 +25,7 @@ functions:
   upload:
     handler: com.hackathon.LambdaHandler::handleRequest
     role: LambdaRole
+    timeout: 30
     events:
       - http:
           path: content/upload
@@ -32,6 +34,7 @@ functions:
   translate:
     handler: com.hackathon.LambdaHandler::handleRequest
     role: LambdaRole
+    timeout: 30
     events:
       - http:
           path: content/translate
@@ -40,6 +43,7 @@ functions:
   uploadImage:
     handler: com.hackathon.LambdaHandler::handleRequest
     role: LambdaRole
+    timeout: 30
     events:
       - http:
           path: content/uploadHack
