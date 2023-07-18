@@ -13,7 +13,12 @@ class ImageDescriptionService(private var computeVisionClient: ComputerVisionCli
     }
 
     fun generateImageDescription(base64EncodedImage: String): String {
-        val imageBytes: ByteArray = DatatypeConverter.parseBase64Binary(base64EncodedImage)
+        var base64 = base64EncodedImage
+        if (base64.contains(",")) {
+            base64 = base64.split(",")[1]
+        }
+        
+        val imageBytes: ByteArray = DatatypeConverter.parseBase64Binary(base64)
 
         val analysis = computeVisionClient.computerVision()
             .describeImageInStream()
