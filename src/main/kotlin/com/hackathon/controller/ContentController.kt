@@ -3,6 +3,7 @@ package com.hackathon.controller
 import com.hackathon.data.ContentRequest
 import com.hackathon.data.TranslateDescriptionRequest
 import com.hackathon.service.ContentService
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -14,8 +15,12 @@ import org.springframework.web.bind.annotation.RestController
 class ContentController(private val service: ContentService) {
 
     @PostMapping("upload")
-    fun upload(@RequestBody request: ContentRequest): String {
-        return service.generateAndTranslateDescription(request)
+    fun upload(@RequestBody request: ContentRequest): ResponseEntity<String> {
+        if (request.base64EncodedImage?.isEmpty()!!) {
+            return ResponseEntity("No image provided", org.springframework.http.HttpStatus.BAD_REQUEST)
+        }
+
+        return ResponseEntity.ok(service.generateAndTranslateDescription(request))
     }
 
     @PostMapping("translate")
