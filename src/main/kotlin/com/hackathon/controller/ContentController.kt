@@ -1,7 +1,6 @@
 package com.hackathon.controller
 
 import com.hackathon.data.ContentRequest
-import com.hackathon.data.TranslateDescriptionRequest
 import com.hackathon.service.ContentService
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -16,11 +15,6 @@ class ContentController(private val service: ContentService) {
     @PostMapping("upload")
     fun upload(@RequestBody request: ContentRequest): String {
         return service.generateAndTranslateDescription(request)
-    }
-
-    @PostMapping("translate")
-    fun translate(@RequestBody request: TranslateDescriptionRequest): String {
-        return service.generateDescriptionTranslation(request)
     }
 
     @PostMapping("uploadHack")

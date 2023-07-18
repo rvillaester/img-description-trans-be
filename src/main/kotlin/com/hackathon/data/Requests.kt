@@ -5,9 +5,3 @@ data class ContentRequest(
     val base64EncodedImage: String?,
     val language: String
 )
-
-data class TranslateDescriptionRequest(
-    val description: String,
-    val language: String,
-    val sourceLanguage: String
-)

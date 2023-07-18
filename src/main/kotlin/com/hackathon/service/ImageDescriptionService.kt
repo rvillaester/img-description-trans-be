@@ -1,12 +1,15 @@
 package com.hackathon.service
 
-import com.microsoft.azure.cognitiveservices.vision.computervision.ComputerVisionClient
+import com.amazonaws.services.simplesystemsmanagement.AWSSimpleSystemsManagement
+import com.amazonaws.services.simplesystemsmanagement.model.GetParameterRequest
 import org.springframework.stereotype.Service
+import java.io.ByteArrayInputStream
+import javax.imageio.ImageIO
 import javax.xml.bind.DatatypeConverter
 
 
 @Service
-class ImageDescriptionService(private var computeVisionClient: ComputerVisionClient) {
+class ImageDescriptionService(private val ssm: AWSSimpleSystemsManagement) {
 
     fun generateDescription(filename: String): String {
         return descriptionMap[filename] ?: ""
@@ -14,17 +17,17 @@ class ImageDescriptionService(private var computeVisionClient: ComputerVisionCli
 
     fun generateImageDescription(base64EncodedImage: String): String {
         val imageBytes: ByteArray = DatatypeConverter.parseBase64Binary(base64EncodedImage)
+        val img = ImageIO.read(ByteArrayInputStream(imageBytes))
+        val apiKey = getSecret("/hackathon/api-key")
 
-        val analysis = computeVisionClient.computerVision()
-            .describeImageInStream()
-            .withImage(imageBytes)
-            .execute()
+        // TODO: call actual API that will generate the image description
+        return "This is to be implemented"
+    }
 
-        if (analysis?.captions()?.size!! > 0) {
-            return analysis.captions().first().text()
-        }
-
-        return "No description found"
+    private fun getSecret(paramName: String): String {
+        val paramRequest: GetParameterRequest = GetParameterRequest()
+            .withName(paramName)
+        return ssm.getParameter(paramRequest).parameter.value
     }
 
     companion object {

@@ -115,11 +115,6 @@
       <version>${kotlin.version}</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>com.microsoft.azure.cognitiveservices</groupId>
-      <artifactId>azure-cognitiveservices-computervision</artifactId>
-      <version>1.0.9-beta</version>
-    </dependency>
   </dependencies>
 
   <build>
