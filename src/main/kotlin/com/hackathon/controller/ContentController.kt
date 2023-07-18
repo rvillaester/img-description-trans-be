@@ -21,12 +21,12 @@ class ContentController(private val service: ContentService) {
             return ResponseEntity("No image provided", org.springframework.http.HttpStatus.BAD_REQUEST)
         }
 
-        try {
-            return ResponseEntity.ok(service.generateAndTranslateDescription(request))
+        return try {
+            ResponseEntity.ok(service.generateAndTranslateDescription(request))
         } catch (e: ComputerVisionErrorResponseException) {
-            return ResponseEntity("Error describing image", org.springframework.http.HttpStatus.BAD_REQUEST)
+            ResponseEntity("Error describing image", org.springframework.http.HttpStatus.BAD_REQUEST)
         } catch (e: Exception) {
-            return ResponseEntity("Unknown error encountered", org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR)
+            ResponseEntity("Unknown error encountered", org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR)
         }
     }
 
